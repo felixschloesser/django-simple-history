@@ -125,6 +125,8 @@ class SimpleHistoryAdmin(admin.ModelAdmin):
             return super(SimpleHistoryAdmin, self).response_change(request, obj)
 
     def history_form_view(self, request, object_id, version_id, extra_context=None):
+        object_id = self._decode_id(self.model, object_id)
+        
         request.current_app = self.admin_site.name
         original_opts = self.model._meta
         model = getattr(
@@ -238,3 +240,8 @@ class SimpleHistoryAdmin(admin.ModelAdmin):
     @property
     def revert_disabled(self):
         return getattr(settings, "SIMPLE_HISTORY_REVERT_DISABLED", False)
+    
+    def _decode_id(self, model, object_id):
+        decoded_id = str(model(id=0).id.decode(object_id))
+
+        return decoded_id
