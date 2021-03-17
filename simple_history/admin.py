@@ -40,6 +40,10 @@ class SimpleHistoryAdmin(admin.ModelAdmin):
 
     def history_view(self, request, object_id, extra_context=None):
         """The 'history' admin view for this model."""
+        
+        # Making it compatible with Hashid
+        object_id = self._decode_id(self.model, object_id)
+        
         request.current_app = self.admin_site.name
         model = self.model
         opts = model._meta
